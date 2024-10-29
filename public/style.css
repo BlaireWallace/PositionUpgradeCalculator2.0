@@ -1,0 +1,258 @@
+body {
+    text-align: center;
+    background-color: rgb(156, 209, 167);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: white;
+}
+
+div {
+    /* background-color: red; */
+}
+
+#text{
+    color:white;
+}
+
+.text{
+    color:white;
+}  
+
+.userInputDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin: 0 auto;
+    margin-top: 1vh;
+    width: fit-content;
+    height: fit-content;
+    min-width: 50vh;
+    min-height: 1vh;
+}
+
+.userInputDiv div, .userInputDiv input{
+    margin-top: 1vh;
+}
+
+.userInputDiv input{
+    width: 50%;
+}
+
+.numberInput{
+    text-align: center;
+}
+
+#resourceDiv{
+    margin: 0 auto;
+    width: 80vh;
+    height: 8vh;
+
+    justify-content: center;
+
+    display: grid;
+    grid-template-columns: repeat(5,10%);
+    gap: 5vh;
+    grid-auto-rows: 0;
+}
+
+/* Item in the resource div */
+#resourceDiv >*{
+    position: relative;
+    aspect-ratio: 1 / 1;
+    /* padding-top: 100%; */
+    box-sizing: border-box;
+    background-color: white;
+}
+
+/* everyitem child in the Item in the resource div */
+#resourceDiv >* >*{
+    position:absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+}
+
+/* remember me div setting */
+#rememberLevelDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#rememberLevelDiv span{
+    text-align: center;
+}
+
+/* Number format div setting */
+#numberFormatDiv {}
+#numberFormatDiv div{
+    display: flex;
+    gap: 1vh;
+    justify-content: center;
+}
+
+#numberFormatDiv div button{
+    width: fit-content;
+}
+
+/* Current Total Upgrade Div */
+#currentUpgradeTotalDiv{}
+#currentUpgradeTotalDiv div{
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 50%;
+    height: fit-content;
+    min-height: 1vh;
+    margin-bottom: 1vh;
+    gap: 1vh;
+}
+
+/* Small Screen */
+#posUpgradeDiv {
+    margin: 0 auto;
+    margin-top: 3vh;
+
+    height: 150vh;
+    width: 52.5vh;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5vh;
+}
+
+/* Min size */
+#posUpgradeSection {
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, .5);
+    border: 20px solid rgba(0, 0, 0, .05);
+    border-radius: 10px;
+
+    width: 100%;
+    height: 50%;
+}
+
+#chart{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    grid-template-rows: repeat(5,1fr);
+    gap: 1vh;
+
+    justify-items: center;
+    align-items: center;
+
+    /* background-color: white; */
+    height: 80%;
+    width: 100%;
+}
+
+/* All the barrels to upgrade */
+#chart >* {
+    /* background-color: rgba(0, 255, 0, .5); */
+    aspect-ratio: 1/1;
+
+    box-sizing: border-box;
+    /* border: 1px solid white; */
+    
+    width: 75%;
+    height: fit-content;
+    object-fit: contain;
+    position: relative;
+}
+
+.barrelInputLevel {
+    position: absolute;
+    top: 50%;                             
+    left: 63%;                           
+    transform: translate(-50%, -50%);    
+    width: 100%;                           
+    height: 10%;   
+    z-index: 1;                                                 
+    background-color: rgba(255, 255, 255, 0); 
+    border: 1px solid rgba(255, 255, 255, 0);              
+    text-align:center;                  
+    padding: 5px;                        
+    font-size: 1.2rem;                
+}
+
+#chartDesc {
+    box-sizing: border-box;
+    background-color: rgba(128, 128, 128, 1);
+    border: 5px solid rgba(128, 128, 128, 1);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1%;
+
+    width: 100%;
+    min-height: 20%;
+    height: fit-content;
+}
+
+#chartDesc div{
+    width: 49%;
+    /* background-color: white; */
+}
+ 
+#chartDesc div div{
+    position: relative;
+    box-sizing: border-box;
+    /* background-color: red; */
+    width: 100%;
+}
+
+.setDiv {
+    gap: 1vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    /* align-items: center; */
+}
+
+.setDiv img{
+    max-width: 10%;
+    object-fit: cover;
+}
+
+.totalupgradeDescDiv {
+    margin: 1vh;
+    /* background-color: red; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.totalupgradeDescDiv img {
+    width: 8vh;
+    aspect-ratio: 1/1;
+}
+
+/* Pos upgrade div (Full Screen) */
+@media screen and (min-width: 720px) {
+    /* full screen */
+    #posUpgradeDiv {
+        margin: 0 auto;
+        margin-top: 3vh;
+
+        height: 70vh;
+        width: 110vh;
+
+        display: flex;
+        flex-direction: row;
+        gap: 5vh;
+    }
+
+    #posUpgradeSection{
+        width: 50%;
+        height: 100%;
+    }
+}
