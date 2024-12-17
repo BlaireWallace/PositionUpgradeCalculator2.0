@@ -80,6 +80,10 @@ function setResource(name){
         Widgets.masteryReductionDiv.style.display = "Flex"
         Widgets.masteryReductionDiv.querySelectorAll("span")[1].innerHTML = `(Barrel Mastery Level ${BARREL_MASTERY_RED[name]})`
 
+        if (data["masteryReduction"] == null){
+            data["masteryReduction"] = {}
+        }
+
         if (data["masteryReduction"][name]){            
             Widgets.masteryReductionDiv.querySelector("input").value = parseFloat(data["masteryReduction"][name] || 1)
         }
