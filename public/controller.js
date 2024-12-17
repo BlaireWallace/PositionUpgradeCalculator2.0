@@ -73,6 +73,26 @@ function setResource(name){
     if (resources[name] == null){
         return
     }
+
+    const BARREL_MASTERY_RED = {"magnets":18,"wrench":19,"starFragments":20}
+    // hide barrel master pos upgrade
+    if (BARREL_MASTERY_RED[name]){
+        Widgets.masteryReductionDiv.style.display = "Flex"
+        Widgets.masteryReductionDiv.querySelectorAll("span")[1].innerHTML = `(Barrel Mastery Level ${BARREL_MASTERY_RED[name]})`
+
+        if (data["masteryReduction"][name]){            
+            Widgets.masteryReductionDiv.querySelector("input").value = parseFloat(data["masteryReduction"][name] || 1)
+        }
+        else{
+            Widgets.masteryReductionDiv.querySelector("input").value = null
+        }
+
+    }
+    else{
+        Widgets.masteryReductionDiv.style.display = "None"
+    }
+    
+
     const resourcename = resources[name]
     CURRENT_RESOURCE = name
     // set current resource text
@@ -437,7 +457,8 @@ async function updateToServer(){
                     data: data[CURRENT_RESOURCE].barrels,
                     resource: CURRENT_RESOURCE,
                     reductionPercent: data.reductionPercent || 0,
-                    resourceAmountInput: data["resourceInput"][CURRENT_RESOURCE].data
+                    resourceAmountInput: data["resourceInput"][CURRENT_RESOURCE].data,
+                    masteryReduction: data["masteryReduction"][CURRENT_RESOURCE] || 1
                 },
             }) 
         })
@@ -642,6 +663,21 @@ Widgets.reductionInput.input.addEventListener("input", reductionrateInputChanged
 
 Widgets.targetReductionInput.querySelector("div").querySelector("input").addEventListener("input", function(){
     reductionrateInputChanged()
+})
+
+Widgets.masteryReductionDiv.querySelector("input").addEventListener("input", function(){
+    // mastery reduction changed (only applies wrench, magnets, and frags)
+    if (data["masteryReduction"] == null){
+        data["masteryReduction"] = {}
+    }
+
+    const BARREL_MASTERY_RED = ["magnets","wrench","starFragments"]
+    // hide barrel master pos upgrade
+    if (BARREL_MASTERY_RED.includes(CURRENT_RESOURCE)){
+        data["masteryReduction"][CURRENT_RESOURCE] = parseFloat(Widgets.masteryReductionDiv.querySelector("input").value)
+    }
+
+    updateToServer()
 })
 
 Widgets.rememberLevel.querySelector("input").addEventListener("input", function(){
