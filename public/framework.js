@@ -58,6 +58,8 @@ numberFormatDiv.querySelector("div").removeChild(numberFormatButton)
 // position reduction input
 const posReductionInput = document.getElementById("posReductionDiv").querySelector("input")
 
+const masteryReductionDiv = document.getElementById("masteryReductionDiv")
+
 // current resource input
 const currentResourceInput = {
     "input": document.getElementById("currentResourceDiv").querySelector("input"),
@@ -172,6 +174,8 @@ Widgets["NumberFormat"] = {
 
 // position reduction input
 Widgets["positionReductionInput"] = posReductionInput
+
+Widgets["masteryReductionDiv"] = masteryReductionDiv
 
 // current resource input
 Widgets["currentResourceInput"] = currentResourceInput
