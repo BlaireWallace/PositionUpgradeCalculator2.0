@@ -64,8 +64,9 @@ function isCompatible(a,b){
     return good
 }
 
-function getUpgradeCosts(name,a,b,reduction){
+function getUpgradeCosts(name,a,b,reduction, masteryReduction){
     const reductionPercent = new bigNumber(reduction).dividedBy(100)
+    const masteryReduc = new bigNumber(masteryReduction)
     let total = new bigNumber(0)
     let totalUpgrades = 0
 
@@ -86,7 +87,11 @@ function getUpgradeCosts(name,a,b,reduction){
             else { // go get the posPrice
                 for (let i=currentLevel + 1;i<targetLevel + 1; i++){
                     let price = new bigNumber(formula[name](i))
-                    let reductionPrice = new bigNumber(Math.floor(price.multipliedBy(reductionPercent).plus(.5)))
+                    // achievement reduction
+                    let reductionPrice_A = new bigNumber(price.multipliedBy(reductionPercent))
+                    // mastery reduction
+                    let reductionPrice_B = new bigNumber(price.minus(new bigNumber(price.multipliedBy(masteryReduc))))
+                    let reductionPrice = new bigNumber(Math.floor(reductionPrice_A.plus(reductionPrice_B).plus(.5)))
                     const newPrice = new bigNumber(price.minus(reductionPrice))
     
                     const copyTotal = total.plus(newPrice)
@@ -128,6 +133,8 @@ app.post('/calculate', (req,res)=>{
     const reductionPercent = parcel.reductionPercent
     const currentTotalUpgrades = parcel.currentTotalUpgrades
 
+    const masteryReduction = parcel.masteryReduction
+
     let data = {
         resource: resourceName,
         deltaTotalUpgrades: 0,
@@ -141,7 +148,7 @@ app.post('/calculate', (req,res)=>{
     }
 
     // calculate the level base on min max
-    const info = getUpgradeCosts(resourceName, current, target, reductionPercent)
+    const info = getUpgradeCosts(resourceName, current, target, reductionPercent, masteryReduction)
 
     if (info.cost.isEqualTo(0)){
         res.json({status: "success", data: data})
