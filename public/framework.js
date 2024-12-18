@@ -206,3 +206,7 @@ Widgets["targetReductionInput"] = targetReductionInput
 Widgets["totalUpgradeStatusText"] = totalUpgradeStatusText
 
 Widgets["requireTotalUpgradeText"] = requireTotalUpgradeText
+
+// calculate buttons
+Widgets["calculatePositionUpgradeButton"] = document.getElementById("calculatePositionUpgrade")
+Widgets["calculateTotalUpgradeButton"] = document.getElementById("calculateTotalUpgrade")
