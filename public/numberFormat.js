@@ -58,21 +58,21 @@ function convertToRegularNumber(number) {
     return formatNumberWithSpaces(number);
 }
 
-function formatNumberWithSpaces_(number) {
-    // Create a NumberFormat instance with US locale and custom pattern
-    let decimalFormat = new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 3
-    });
+// function formatNumberWithSpaces_(number) {
+//     // Create a NumberFormat instance with US locale and custom pattern
+//     let decimalFormat = new Intl.NumberFormat('en-US', {
+//         // minimumFractionDigits: 0,
+//         maximumFractionDigits: 3
+//     });
 
-    // Format the number with commas for thousands separators
-    let formattedNumber = decimalFormat.format(number);
+//     // Format the number with commas for thousands separators
+//     let formattedNumber = decimalFormat.format(number);
 
-    // Replace commas with spaces
-    formattedNumber = formattedNumber.replace(/,/g, ' ');
+//     // Replace commas with spaces
+//     formattedNumber = formattedNumber.replace(/,/g, ' ');
 
-    return formattedNumber;
-}
+//     return formattedNumber;
+// }
 
 function toScientificNotationFromString(numString) {
     let n = new bigNumber(numString)
@@ -82,7 +82,7 @@ function toScientificNotationFromString(numString) {
     }
      // Check if the string is a valid number using a regular expression
      if (!/^[+-]?(\d+)(\.\d+)?$/.test(numString)) {
-        console.log("Invalid number format (We will fix this later)")
+        console.log("Invalid scientific number format " + numString)
         return false;
      }
      
@@ -142,24 +142,24 @@ function formatNumberWithSpaces(numberString) {
 
     // Check if the string is a valid number format (supports integers and decimals)
     if (!/^[+-]?(\d+)(\.\d+)?$/.test(numberString)) {
-        console.log("Invalid number format");
+        console.log("Invalid white space number format " + numberString);
         return false;
     }
 
     // Split the number into integer and decimal parts
-    let [integerPart, decimalPart] = numberString.split('.');
+    let [integerPart] = numberString.split('.'); // Ignore the decimal part
 
     // Add spaces as thousands separators to the integer part
     let formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 
-    // Recombine the integer and decimal parts (if any)
-    return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+    return formattedInteger; // Return only the integer part with spaces
 }
 
 function convertToMetricPrefixes(numberString) {
     // Check if the string is a valid number
     if (!/^[+-]?(\d+)(\.\d+)?$/.test(numberString)) {
-        return "Invalid number format";
+        console.log("Invalid prefix number format " + numberString)
+        return false
     }
 
     const n = parseFloat(numberString)
@@ -175,8 +175,15 @@ function convertToMetricPrefixes(numberString) {
 
         // If the number is greater than or equal to the current prefix value
         if (n >= prefixValue) {
-            const formattedValue = (n / prefixValue).toFixed(2); // Format to 2 decimal places
-            return `${formattedValue} ${prefixes[i].symbol}`;
+            const formattedValue = (n / prefixValue) // Format to 2 decimal places
+            let numberStr = formattedValue.toString(); // Convert to string
+
+            // Split and reformat to keep only 3 decimals
+            let [base, exponent] = numberStr.split('e');
+            let formattedBase = parseFloat(base).toFixed(3); // Round to 3 decimals
+            // let result = formattedBase.replace('.', ''); // Remove decimal
+
+            return `${formattedBase} ${prefixes[i].symbol}`;
         }
     }
 
