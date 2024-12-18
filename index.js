@@ -64,6 +64,23 @@ function isCompatible(a,b){
     return good
 }
 
+function isUnderLimit(a,b){
+    const LIMIT = 1500
+    let good = true
+    for (let row = 1; row < 6; row++){
+        for (let column = 1; column < 5; column++){
+            const vA = a[row][column]
+            const vB = b[row][column]
+
+            if (vA > LIMIT || vB > LIMIT){
+                good = false
+                break
+            }
+        }
+    }
+    return good
+}
+
 function getUpgradeCosts(name,a,b,reduction, masteryReduction){
     const reductionPercent = new bigNumber(reduction).dividedBy(100)
     const masteryReduc = new bigNumber(masteryReduction)
@@ -77,7 +94,8 @@ function getUpgradeCosts(name,a,b,reduction, masteryReduction){
             const currentLevel = a[row][column]
             const targetLevel = b[row][column]
             let posPrice = new bigNumber(0)
-
+            
+            // get saved difference
             if (v[currentLevel] && v[currentLevel][targetLevel]){
                 const copyTotal = total.plus(v[currentLevel][targetLevel])
                 const difference = targetLevel - currentLevel
@@ -88,12 +106,27 @@ function getUpgradeCosts(name,a,b,reduction, masteryReduction){
                 for (let i=currentLevel + 1;i<targetLevel + 1; i++){
                     let price = new bigNumber(formula[name](i))
                     // achievement reduction
-                    let reductionPrice_A = new bigNumber(price.multipliedBy(reductionPercent))
-                    // mastery reduction
-                    let reductionPrice_B = new bigNumber(price.minus(new bigNumber(price.multipliedBy(masteryReduc))))
-                    let reductionPrice = new bigNumber(Math.floor(reductionPrice_A.plus(reductionPrice_B).plus(.5)))
-                    const newPrice = new bigNumber(price.minus(reductionPrice))
-    
+                    let reduction
+
+                    if (reductionPercent.isLessThanOrEqualTo(0)){
+                        // then let the other reduction be multiplied by the original price
+                        // ignore multiplying with redution percent
+                        reduction = new bigNumber(price.multipliedBy( masteryReduc ) )
+                    }
+                    else{
+                        // multiply
+                        const start = new bigNumber(1)
+
+                        reduction = new bigNumber(price.multipliedBy( start.minus(reductionPercent) ).multipliedBy( masteryReduc ) )
+                    }
+
+                    let newPrice = reduction //new bigNumber(price.minus(reduction))
+
+                    // console.log(`price -> ${price.toString()} mastery red -> ${masteryReduc.toString()} new price -> ${newPrice.toString()}`)
+
+                    if (newPrice.isLessThan(1)){
+                        newPrice = 1
+                    }
                     const copyTotal = total.plus(newPrice)
                     total = copyTotal
     
@@ -134,16 +167,29 @@ app.post('/calculate', (req,res)=>{
     const currentTotalUpgrades = parcel.currentTotalUpgrades
 
     const masteryReduction = parcel.masteryReduction
-
     let data = {
         resource: resourceName,
         deltaTotalUpgrades: 0,
         counter: getCounter()
     }
 
+    if (masteryReduction > 1 || masteryReduction < .00001){
+        res.json({status: "failed",data: data, message: "Barrel Mastery reduction is out of bounds. \n Value needs to be in range from 1 to .00001"})
+        return
+    }
+
+    if (reductionPercent > 20 || reductionPercent < 0){
+        res.json({status: "failed",data: data, message: "Achievement cost reduction is out of bounds. \n Value needs to be in range from 10 to 0"})
+        return
+    }
+
     if (!isCompatible(current,target)){
-        console.log("error");
         res.json({status: "failed",data: data, message: "Current position level is higher than target position level!"})
+        return
+    }
+
+    if (!isUnderLimit(current,target)){
+        res.json({status: "failed",data: data, message: "Level is over the limit (Level Limit 1 500)"})
         return
     }
 
@@ -185,6 +231,12 @@ app.post('/calculate', (req,res)=>{
         resource: resourceName,
         counter: getCounter()
     }
+
+    if (data.finalnormal == false || data.finalsuffix == false || data.finalscientific == false || data.totalnormal == false || data.totalsuffix == false || data.totalscientific == false){
+        res.json({status: "failed",data: data, message: "Unable to calculate (Number Too Large or Small)"})
+    }
+
+
 
     // loop through each barral pos, get level difference and calculate
 
