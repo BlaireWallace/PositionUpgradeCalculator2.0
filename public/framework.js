@@ -93,6 +93,10 @@ function newUpgradeDiv(name){
             const barrelClone = barrelFrame.cloneNode(true)
             cloneDiv.querySelector("#chart").appendChild(barrelClone)
             barrels[x][y] = barrelClone
+
+            if (name == "Target Levels"){
+                barrelClone.querySelector("input").value = 5 
+            }
         }
     }
 
