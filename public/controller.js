@@ -456,10 +456,19 @@ function currentTotalUpgradeChanged(){
 
 // update to server
 async function updateToServer(){
-
+    if (data == null || data[CURRENT_RESOURCE] == null){
+        Widgets.posUpgradeStatusText.innerHTML = "Status: NO DATA"
+        Widgets.posUpgradeStatusText.style.color = "red"
+        return
+    }
     try{
         Widgets.posUpgradeStatusText.innerHTML = "Status: Calculating"
         Widgets.posUpgradeStatusText.style.color = "yellow"
+
+        let masteryreductionvalue = 1
+        if (data["masteryReduction"] && data["masteryReduction"][CURRENT_RESOURCE]){
+            masteryreductionvalue = data["masteryReduction"][CURRENT_RESOURCE]
+        }
 
         const response = await fetch("/calculate", {
             method: 'POST',
@@ -472,7 +481,7 @@ async function updateToServer(){
                     resource: CURRENT_RESOURCE,
                     reductionPercent: data.reductionPercent || 0,
                     resourceAmountInput: data["resourceInput"][CURRENT_RESOURCE].data,
-                    masteryReduction: data["masteryReduction"][CURRENT_RESOURCE] || 1
+                    masteryReduction: masteryreductionvalue
                 },
             }) 
         })
@@ -491,6 +500,8 @@ async function updateToServer(){
 
         saveData()
     } catch (error){
+        console.log(error)
+        document.getElementById("errorTxt").innerHTML = error
         Widgets.posUpgradeStatusText.innerHTML = "Status: SYSTEM ERROR"
         Widgets.posUpgradeStatusText.style.color = "red"
     }
@@ -726,6 +737,9 @@ function loadData(){
     if (value != null){
         data = value
         console.log(data)
+    }
+    else{
+
     }
 }
 
