@@ -10,7 +10,7 @@
     <h1> Position Ugrade Calculator </h1>
 
     <!-- Current resource and input -->
-    <h2 id="currentResourceTxt"> Current Resource: N/A </h2>
+    <h2 id="currentResourceTxt"> Select a resource to begin </h2>
     <div id="resourceDiv">
         <div id="itemFrame">
             <button style="z-index: 1; background-color: rgba(0, 0, 0, 0);"></button>
@@ -123,9 +123,11 @@
     </div>
 
     <!-- Status and results -->
-    <h3 id="posupgradeStatusText">Status</h3>
+    <h3 id="posupgradeStatusText" style="flex-direction: column;">Status</h3>
 
-    <button id="calculatePositionUpgrade">Calculate</button>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <button id="calculatePositionUpgrade" style="text-align: center;">Calculate</button>
+    </div>
 
     <div id="requirementsDiv" style="display: flex; justify-content: center; align-items: center; flex-direction: row;">
         <h2>You need x:</h2>
@@ -149,8 +151,7 @@
         </div>
     </div>
 
-
-    <!-- <div style="width: 100%; height: 1vh; background-color: black;"></div> -->
+    <div style="width: 100%; height: 25vh; background-color: transparent;"></div>
     
     <h1> Position Upgrade Reduction Calculator </h1>
 
