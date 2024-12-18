@@ -173,6 +173,11 @@ app.post('/calculate', (req,res)=>{
         counter: getCounter()
     }
 
+    if (!resourceName){
+        res.json({status: "failed",data: data, message: "Resoruce not selected"})
+        return
+    }
+
     if (masteryReduction > 1 || masteryReduction < .00001){
         res.json({status: "failed",data: data, message: "Barrel Mastery reduction is out of bounds. \n Value needs to be in range from 1 to .00001"})
         return
