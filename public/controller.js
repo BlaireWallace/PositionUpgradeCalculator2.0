@@ -1,5 +1,7 @@
 import {get} from "./framework.js"
 
+let started = false
+
 const prefixes = [
     { symbol: 'NTR', factor: 1e123 }, { symbol: 'OTR', factor: 1e120 }, { symbol: 'sTR', factor: 1e117 },{ symbol: 'STR', factor: 1e114 }, { symbol: 'qTR', factor: 1e111 }, { symbol: 'QTR', factor: 1e108 },{ symbol: 'TTR', factor: 1e105 }, { symbol: 'DTR', factor: 1e102 },{ symbol: 'UTR', factor: 1e99 }, { symbol: 'Tr', factor: 1e96 }, { symbol: 'NV', factor: 1e93 }, { symbol: 'OV', factor: 1e90 }, { symbol: 'sV', factor: 1e87 },{ symbol: 'Sp', factor: 1e84 }, { symbol: 'SV', factor: 1e81 }, { symbol: 'qV', factor: 1e78 },{ symbol: 'QV', factor: 1e75 }, { symbol: 'TV', factor: 1e72 },{ symbol: 'DV', factor: 1e69 }, { symbol: 'UV', factor: 1e66 }, { symbol: 'V', factor: 1e63 }, { symbol: 'ND', factor: 1e60 }, { symbol: 'OD', factor: 1e57 },{ symbol: 'sD', factor: 1e54 }, { symbol: 'SD', factor: 1e51 }, { symbol: 'qD', factor: 1e48 },{ symbol: 'QD', factor: 1e45 }, { symbol: 'TD', factor: 1e42 },{ symbol: 'DD', factor: 1e39 }, { symbol: 'UD', factor: 1e36 }, { symbol: 'D', factor: 1e33 }, { symbol: 'N', factor: 1e30 }, { symbol: 'O', factor: 1e27 },{ symbol: 's', factor: 1e24 }, { symbol: 'S', factor: 1e21 }, { symbol: 'q', factor: 1e18 },{ symbol: 'Q', factor: 1e15 }, { symbol: 'T', factor: 1e12 },{ symbol: 'B', factor: 1e9 }, { symbol: 'M', factor: 1e6 }
 ];
@@ -74,6 +76,8 @@ function setResource(name){
         return
     }
 
+    openCalculator()
+
     const BARREL_MASTERY_RED = {"magnets":18,"wrench":19,"starFragments":20}
     // hide barrel master pos upgrade
     if (BARREL_MASTERY_RED[name]){
@@ -129,7 +133,7 @@ function setResource(name){
             data[name]["barrels"]["target"][row] = {}
             for (let column=0+1;column<4+1;column++){
                 data[name]["barrels"]["current"][row][column] = 0
-                data[name]["barrels"]["target"][row][column] = 0
+                data[name]["barrels"]["target"][row][column] = 5
             }
         }
     }
@@ -160,6 +164,8 @@ function setResource(name){
 
             // set values
             setBarrelLevel("current",row,column,currentBarrel.querySelector("input"),data[name]["barrels"]["current"][row][column])
+
+            // if theres a problem with this then we will by default set the barrels value to 5
             setBarrelLevel("target",row,column,targetBarrel.querySelector("input"),data[name]["barrels"]["target"][row][column])
         }
     }
@@ -747,6 +753,25 @@ async function run(){
     }
 }
 
+function openCalculator(){
+    if (started == true){
+        return
+    }
+    started = true
+
+    Widgets.rememberLevel.style.display = "flex"
+    Widgets.NumberFormat["text"].style.display = "flex"
+    document.getElementById("numberFormatDiv").style.display = "flex"
+    document.getElementById("posReductionDiv").style.display = "flex"
+    Widgets.masteryReductionDiv.style.display = "flex"
+    document.getElementById("currentResourceDiv").style.display = "flex"
+    document.getElementById("currentUpgradeTotalDiv").style.display = "flex"
+    document.getElementById("posUpgradeDiv").style.display = "flex"
+    Widgets.posUpgradeStatusText.style.display = "flex"
+    Widgets.requirementsDiv.style.display = "flex"
+    Widgets.calculatePositionUpgradeButton.style.display = "flex"
+}
+
 function detectPageCloseOrReload() {
     window.addEventListener("beforeunload", (event) => {
         // event.preventDefault();
@@ -773,12 +798,25 @@ function detectPageCloseOrReload() {
     Widgets.reductionInput.input.value = data["curentTotalUpgrade2"] != null ? data["curentTotalUpgrade2"] : null
 
 
-    setResource("goldenScrap") // default
+    // setResource("goldenScrap") // default
     displayStatusMessage(true)
     numberFormatChanged("Suffix")
-    updatePositionUpgradeUI()
+    // updatePositionUpgradeUI()
     reductionrateInputChanged()
-    
+
+    // hide pos upgrade calculator when loaded
+    Widgets.rememberLevel.style.display = "none"
+    Widgets.NumberFormat["text"].style.display = "none"
+    document.getElementById("numberFormatDiv").style.display = "none"
+    document.getElementById("posReductionDiv").style.display = "none"
+    Widgets.masteryReductionDiv.style.display = "none"
+    document.getElementById("currentResourceDiv").style.display = "none"
+    document.getElementById("currentUpgradeTotalDiv").style.display = "none"
+    document.getElementById("posUpgradeDiv").style.display = "none"
+    Widgets.posUpgradeStatusText.style.display = "none"
+    Widgets.requirementsDiv.style.display = "none"
+    Widgets.calculatePositionUpgradeButton.style.display = "none"
+
 });
 
 detectPageCloseOrReload()
