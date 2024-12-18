@@ -88,7 +88,7 @@ function setResource(name){
             Widgets.masteryReductionDiv.querySelector("input").value = parseFloat(data["masteryReduction"][name] || 1)
         }
         else{
-            Widgets.masteryReductionDiv.querySelector("input").value = null
+            Widgets.masteryReductionDiv.querySelector("input").value = 1 // default
         }
 
     }
@@ -326,6 +326,7 @@ function cloneBarrels(state){
 
 function upgradeCostReductionChanged(input){
     // update server
+    const max = 20
     let d = parseFloat(input.value.replace("%",''))
     if (Number.isNaN(d)){
         input.value = null
@@ -336,8 +337,8 @@ function upgradeCostReductionChanged(input){
     if (d<0){
         d = 0
     }
-    else if(d>10){
-        d = 10
+    else if(d>max){
+        d = max
     }
 
     input.value = "%" + d
@@ -451,6 +452,9 @@ function currentTotalUpgradeChanged(){
 async function updateToServer(){
 
     try{
+        Widgets.posUpgradeStatusText.innerHTML = "Status: Calculating"
+        Widgets.posUpgradeStatusText.style.color = "yellow"
+
         const response = await fetch("/calculate", {
             method: 'POST',
             headers: {
@@ -481,6 +485,8 @@ async function updateToServer(){
 
         saveData()
     } catch (error){
+        Widgets.posUpgradeStatusText.innerHTML = "Status: SYSTEM ERROR"
+        Widgets.posUpgradeStatusText.style.color = "red"
     }
 }
 
@@ -531,6 +537,9 @@ async function reductionrateInputChanged(){
     if (/^\d*\.?\d*$/.test(input.value) && input.value[0] == "." && !Number.isNaN(input.value)) {
         if (Number.isInteger(parseInt(input.value[1]))){
             try{
+                Widgets.totalUpgradeStatusText.innerHTML = "Status: Calculating"
+                Widgets.totalUpgradeStatusText.style.color = "yellow"
+
                 const reductionInputValue = Widgets.reductionInput.input.value != null ? Widgets.reductionInput.input.value : 0
                 const response = await fetch("/calculateUpgradeReduction", {
                     method: 'POST',
@@ -682,6 +691,14 @@ Widgets.masteryReductionDiv.querySelector("input").addEventListener("input", fun
     }
 
     updateToServer()
+})
+
+Widgets.calculatePositionUpgradeButton.addEventListener("click", function(){
+    updateToServer()
+})
+
+Widgets.calculateTotalUpgradeButton.addEventListener("click", function(){
+    reductionrateInputChanged()
 })
 
 Widgets.rememberLevel.querySelector("input").addEventListener("input", function(){
